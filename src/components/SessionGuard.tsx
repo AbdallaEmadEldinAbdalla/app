@@ -7,25 +7,35 @@ export default function SessionGuard({ children }: { children: React.ReactNode }
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const checkSession = () => {
+        const checkSession = async () => {
             try {
-                // Check if we have a session cookie by trying to access document.cookie
-                const cookies = document.cookie;
-                const hasSession = cookies.includes('__session=');
+                // Try to verify session with the auth service
+                // Since __session is httpOnly, we can't read it client-side
+                // We need to make an API call to verify it
+                const response = await fetch('https://auth.arya.services/api/verify-session', {
+                    method: 'GET',
+                    credentials: 'include', // Important: include cookies
+                });
 
-                console.log('SessionGuard: Checking for session cookie:', hasSession);
+                console.log('SessionGuard: Session verification response:', response.status);
 
-                if (!hasSession) {
-                    console.log('SessionGuard: No session cookie found, redirecting to auth');
-                    window.location.href = 'https://auth.arya.services/login';
-                    return;
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.valid) {
+                        console.log('SessionGuard: Session valid, user authenticated');
+                        setIsAuthenticated(true);
+                        return;
+                    }
                 }
 
-                console.log('SessionGuard: Session cookie found, user authenticated');
-                setIsAuthenticated(true);
+                // No valid session, redirect to auth with return URL
+                console.log('SessionGuard: No valid session, redirecting to auth');
+                const returnUrl = encodeURIComponent(window.location.href);
+                window.location.href = `https://auth.arya.services/login?redirect=${returnUrl}`;
             } catch (error) {
                 console.error('SessionGuard: Error checking session:', error);
-                window.location.href = 'https://auth.arya.services/login';
+                const returnUrl = encodeURIComponent(window.location.href);
+                window.location.href = `https://auth.arya.services/login?redirect=${returnUrl}`;
             } finally {
                 setIsLoading(false);
             }
