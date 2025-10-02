@@ -14,12 +14,12 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
                 if (!authToken) {
                     console.log('No auth token found, redirecting to auth service');
-                    window.location.href = 'http://auth.local:3000/login';
+                    window.location.href = 'https://auth.arya.services/login';
                     return;
                 }
 
                 // Verify the token with the auth service
-                const response = await fetch('http://auth.local:3000/api/verify-token', {
+                const response = await fetch('https://auth.arya.services/api/verify-token', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -37,19 +37,19 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
                         // Clear invalid token
                         localStorage.removeItem('auth_token');
                         sessionStorage.removeItem('auth_token');
-                        window.location.href = 'http://auth.local:3000/login';
+                        window.location.href = 'https://auth.arya.services/login';
                     }
                 } else {
                     console.log('Token verification failed, redirecting to auth service');
                     localStorage.removeItem('auth_token');
                     sessionStorage.removeItem('auth_token');
-                    window.location.href = 'http://auth.local:3000/login';
+                    window.location.href = 'https://auth.arya.services/login';
                 }
             } catch (error) {
                 console.error('Auth check failed:', error);
                 localStorage.removeItem('auth_token');
                 sessionStorage.removeItem('auth_token');
-                window.location.href = 'http://auth.local:3000/login';
+                window.location.href = 'https://auth.arya.services/login';
             } finally {
                 setIsLoading(false);
             }

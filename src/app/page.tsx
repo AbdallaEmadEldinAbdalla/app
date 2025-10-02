@@ -16,7 +16,7 @@ export default function Home() {
       sessionStorage.removeItem('auth_token');
 
       // Redirect to auth service
-      window.location.href = 'http://auth.local:3000/login';
+      window.location.href = 'https://auth.arya.services/login';
     } catch (error) {
       console.error('Logout failed:', error);
     } finally {
@@ -34,7 +34,7 @@ export default function Home() {
                 <h1 className="text-xl font-semibold text-gray-900">Main App</h1>
               </div>
               <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-500">app.local:3001</span>
+                <span className="text-sm text-gray-500">app.arya.services</span>
                 <button
                   onClick={handleLogout}
                   disabled={loading}
@@ -64,7 +64,7 @@ export default function Home() {
                       🔐 Single Sign-On
                     </h3>
                     <p className="text-blue-700">
-                      You logged in once at auth.local:3000 and are automatically authenticated here.
+                      You logged in once at auth.arya.services and are automatically authenticated here.
                     </p>
                   </div>
 
@@ -82,7 +82,7 @@ export default function Home() {
                       🔄 Cross-Domain
                     </h3>
                     <p className="text-purple-700">
-                      Visit admin.local:3002 - you&apos;ll be automatically logged in there too!
+                      Visit admin.arya.services - you&apos;ll be automatically logged in there too!
                     </p>
                   </div>
 
@@ -98,7 +98,7 @@ export default function Home() {
 
                 <div className="mt-8">
                   <a
-                    href="http://admin.local:3002"
+                    href="https://admin.arya.services"
                     className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                   >
                     Visit Admin Panel →
