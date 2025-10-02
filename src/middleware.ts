@@ -2,15 +2,15 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
-  // Skip middleware for API routes and static files
-  if (request.nextUrl.pathname.startsWith('/api') || 
-      request.nextUrl.pathname.startsWith('/_next') ||
-      request.nextUrl.pathname.includes('.')) {
-    return NextResponse.next();
-  }
+    // Skip middleware for API routes and static files
+    if (request.nextUrl.pathname.startsWith('/api') ||
+        request.nextUrl.pathname.startsWith('/_next') ||
+        request.nextUrl.pathname.includes('.')) {
+        return NextResponse.next();
+    }
 
-  // Let all requests through - client-side will handle authentication
-  return NextResponse.next();
+    // Let all requests through - client-side will handle authentication
+    return NextResponse.next();
 }
 
 export const config = {
