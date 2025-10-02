@@ -12,12 +12,12 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
                 // First check URL parameters for auth token (from cross-domain redirect)
                 const urlParams = new URLSearchParams(window.location.search);
                 const urlAuthToken = urlParams.get('auth_token');
-                
+
                 if (urlAuthToken) {
                     console.log('AuthGuard: Found auth token in URL, storing locally');
                     localStorage.setItem('auth_token', urlAuthToken);
                     sessionStorage.setItem('auth_token', urlAuthToken);
-                    
+
                     // Clean up URL by removing the token parameter
                     const newUrl = new URL(window.location.href);
                     newUrl.searchParams.delete('auth_token');
