@@ -98,7 +98,7 @@ export default function Home() {
 
                 <div className="mt-8">
                   <a
-                    href="https://admin.arya.services"
+                    href={`https://admin.arya.services?auth_token=${encodeURIComponent(localStorage.getItem('auth_token') || '')}`}
                     className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                   >
                     Visit Admin Panel →

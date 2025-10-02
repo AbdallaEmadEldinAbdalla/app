@@ -9,6 +9,21 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         const checkAuth = async () => {
             try {
+                // First check URL parameters for auth token (from cross-domain redirect)
+                const urlParams = new URLSearchParams(window.location.search);
+                const urlAuthToken = urlParams.get('auth_token');
+                
+                if (urlAuthToken) {
+                    console.log('AuthGuard: Found auth token in URL, storing locally');
+                    localStorage.setItem('auth_token', urlAuthToken);
+                    sessionStorage.setItem('auth_token', urlAuthToken);
+                    
+                    // Clean up URL by removing the token parameter
+                    const newUrl = new URL(window.location.href);
+                    newUrl.searchParams.delete('auth_token');
+                    window.history.replaceState({}, '', newUrl.toString());
+                }
+
                 // Check if we have an auth token
                 const authToken = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
                 console.log('AuthGuard: Checking for auth token:', !!authToken);
