@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import SessionGuard from '@/components/SessionGuard';
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
@@ -25,7 +26,8 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <SessionGuard>
+      <div className="min-h-screen bg-gray-50 flex flex-col">
       <nav className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
@@ -107,6 +109,7 @@ export default function Home() {
           </div>
         </div>
       </main>
-    </div>
+      </div>
+    </SessionGuard>
   );
 }
