@@ -1,10 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AuthGuard from '@/components/AuthGuard';
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
+  const [authToken, setAuthToken] = useState('');
+
+  // Get auth token from localStorage on client side
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setAuthToken(localStorage.getItem('auth_token') || '');
+    }
+  }, []);
 
   const handleLogout = async () => {
     setLoading(true);
@@ -98,7 +106,7 @@ export default function Home() {
 
                 <div className="mt-8">
                   <a
-                    href={`https://admin.arya.services?auth_token=${encodeURIComponent(localStorage.getItem('auth_token') || '')}`}
+                    href={`https://admin.arya.services?auth_token=${encodeURIComponent(authToken)}`}
                     className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                   >
                     Visit Admin Panel →
