@@ -11,12 +11,15 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
             try {
                 // Check if we have an auth token
                 const authToken = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
+                console.log('AuthGuard: Checking for auth token:', !!authToken);
 
                 if (!authToken) {
-                    console.log('No auth token found, redirecting to auth service');
+                    console.log('AuthGuard: No auth token found, redirecting to auth service');
                     window.location.href = 'https://auth.arya.services/login';
                     return;
                 }
+
+                console.log('AuthGuard: Found auth token, verifying...');
 
                 // Verify the token with the auth service
                 const response = await fetch('https://auth.arya.services/api/verify-token', {
@@ -27,20 +30,24 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
                     body: JSON.stringify({ authToken }),
                 });
 
+                console.log('AuthGuard: Token verification response status:', response.status);
+
                 if (response.ok) {
                     const data = await response.json();
+                    console.log('AuthGuard: Token verification response:', data);
                     if (data.valid) {
-                        console.log('Auth token valid, user authenticated');
+                        console.log('AuthGuard: Auth token valid, user authenticated');
                         setIsAuthenticated(true);
                     } else {
-                        console.log('Auth token invalid, redirecting to auth service');
+                        console.log('AuthGuard: Auth token invalid, redirecting to auth service');
                         // Clear invalid token
                         localStorage.removeItem('auth_token');
                         sessionStorage.removeItem('auth_token');
                         window.location.href = 'https://auth.arya.services/login';
                     }
                 } else {
-                    console.log('Token verification failed, redirecting to auth service');
+                    const errorData = await response.json();
+                    console.log('AuthGuard: Token verification failed:', response.status, errorData);
                     localStorage.removeItem('auth_token');
                     sessionStorage.removeItem('auth_token');
                     window.location.href = 'https://auth.arya.services/login';
