@@ -69,6 +69,11 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
                 }
             } catch (error) {
                 console.error('Auth check failed:', error);
+                console.error('Error details:', {
+                    name: error instanceof Error ? error.name : 'Unknown',
+                    message: error instanceof Error ? error.message : String(error),
+                    stack: error instanceof Error ? error.stack : undefined
+                });
                 localStorage.removeItem('auth_token');
                 sessionStorage.removeItem('auth_token');
                 window.location.href = 'https://auth.arya.services/login';
