@@ -82,7 +82,7 @@ export default function Home() {
                       🔄 Cross-Domain
                     </h3>
                     <p className="text-purple-700">
-                      Visit admin.local:3002 - you'll be automatically logged in there too!
+                      Visit admin.local:3002 - you&apos;ll be automatically logged in there too!
                     </p>
                   </div>
 
@@ -91,7 +91,7 @@ export default function Home() {
                       🚪 Global Logout
                     </h3>
                     <p className="text-orange-700">
-                      Logout here and you'll be logged out everywhere automatically.
+                      Logout here and you&apos;ll be logged out everywhere automatically.
                     </p>
                   </div>
                 </div>
