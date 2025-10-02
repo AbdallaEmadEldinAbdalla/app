@@ -1,15 +1,29 @@
 import * as admin from 'firebase-admin';
 
-const serviceAccount = {
+let adminAuth: admin.auth.Auth;
+
+try {
+  const serviceAccount = {
     projectId: process.env.FIREBASE_PROJECT_ID,
     clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
     privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-};
+  };
 
-if (!admin.apps.length) {
-    admin.initializeApp({
+  // Only initialize if we have all required environment variables
+  if (serviceAccount.projectId && serviceAccount.clientEmail && serviceAccount.privateKey) {
+    if (!admin.apps.length) {
+      admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
-    });
+      });
+    }
+    adminAuth = admin.auth();
+  } else {
+    // Create a mock auth object for build time
+    adminAuth = {} as admin.auth.Auth;
+  }
+} catch (error) {
+  // Fallback for build time when env vars might not be available
+  adminAuth = {} as admin.auth.Auth;
 }
 
-export const adminAuth = admin.auth();
+export { adminAuth };
