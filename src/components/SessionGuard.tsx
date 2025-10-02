@@ -9,21 +9,28 @@ export default function SessionGuard({ children }: { children: React.ReactNode }
     useEffect(() => {
         const checkSession = async () => {
             try {
+                console.log('SessionGuard: Starting session verification...');
+
                 // Try to verify session with the auth service
                 // Since __session is httpOnly, we can't read it client-side
                 // We need to make an API call to verify it
                 const response = await fetch('https://auth.arya.services/api/verify-session', {
                     method: 'GET',
                     credentials: 'include', // Important: include cookies
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                 });
 
-                console.log('SessionGuard: Session verification response:', response.status);
+                console.log('SessionGuard: Session verification response:', response.status, response.statusText);
 
                 if (response.ok) {
                     const data = await response.json();
+                    console.log('SessionGuard: Response data:', data);
                     if (data.valid) {
                         console.log('SessionGuard: Session valid, user authenticated');
                         setIsAuthenticated(true);
+                        setIsLoading(false);
                         return;
                     }
                 }
@@ -34,10 +41,15 @@ export default function SessionGuard({ children }: { children: React.ReactNode }
                 window.location.href = `https://auth.arya.services/login?redirect=${returnUrl}`;
             } catch (error) {
                 console.error('SessionGuard: Error checking session:', error);
+                console.error('SessionGuard: Error details:', {
+                    name: error instanceof Error ? error.name : 'Unknown',
+                    message: error instanceof Error ? error.message : String(error),
+                    stack: error instanceof Error ? error.stack : undefined
+                });
+
+                // Still redirect to login on error
                 const returnUrl = encodeURIComponent(window.location.href);
                 window.location.href = `https://auth.arya.services/login?redirect=${returnUrl}`;
-            } finally {
-                setIsLoading(false);
             }
         };
 
