@@ -19,25 +19,25 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect('https://auth.arya.services/login');
     }
 
-  try {
-    // Check if adminAuth is properly initialized
-    if (!adminAuth || typeof adminAuth.verifySessionCookie !== 'function') {
-      console.log('App middleware: Firebase Admin SDK not initialized, redirecting to auth');
-      return NextResponse.redirect('https://auth.arya.services/login');
-    }
+    try {
+        // Check if adminAuth is properly initialized
+        if (!adminAuth || typeof adminAuth.verifySessionCookie !== 'function') {
+            console.log('App middleware: Firebase Admin SDK not initialized, redirecting to auth');
+            return NextResponse.redirect('https://auth.arya.services/login');
+        }
 
-    // Verify the Firebase session cookie
-    const decoded = await adminAuth.verifySessionCookie(session, true);
-    console.log('App middleware: Session verified for user:', decoded.uid);
-    
-    // Add user info to headers for the page
-    const response = NextResponse.next();
-    response.headers.set('x-user-id', decoded.uid);
-    return response;
-  } catch (error) {
-    console.log('App middleware: Session verification failed:', error);
-    return NextResponse.redirect('https://auth.arya.services/login');
-  }
+        // Verify the Firebase session cookie
+        const decoded = await adminAuth.verifySessionCookie(session, true);
+        console.log('App middleware: Session verified for user:', decoded.uid);
+
+        // Add user info to headers for the page
+        const response = NextResponse.next();
+        response.headers.set('x-user-id', decoded.uid);
+        return response;
+    } catch (error) {
+        console.log('App middleware: Session verification failed:', error);
+        return NextResponse.redirect('https://auth.arya.services/login');
+    }
 }
 
 export const config = {
